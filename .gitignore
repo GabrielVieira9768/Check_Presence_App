@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro bundler
+.metro-health-check*
+
+# Debug logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS files
+.DS_Store
+*.pem
+
+# Local environment files
+.env*
+.env*.local
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Ignore api.ts with sensitive IP
+/src/services/api.ts

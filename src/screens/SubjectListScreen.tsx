@@ -1,0 +1,65 @@
+// src/screens/SubjectListScreen.tsx
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
+import api from '../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
+
+type Subject = {
+  id: number;
+  name: string;
+  classrooms_count: number;
+};
+
+export default function SubjectListScreen() {
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    const loadSubjects = async () => {
+      const token = await AsyncStorage.getItem('@token');
+      try {
+        const response = await api.get('/subjects', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setSubjects(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar matérias', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSubjects();
+  }, []);
+
+  if (loading) return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={subjects}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('SubjectDetail', { subjectId: item.id, subjectName: item.name })}
+          >
+            <Text style={styles.title}>{item.name}</Text>
+            <Text style={styles.subtitle}>{item.classrooms_count} aulas</Text>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  item: { padding: 16, backgroundColor: '#f0f0f0', borderRadius: 8, marginBottom: 12 },
+  title: { fontSize: 16, fontWeight: 'bold' },
+  subtitle: { fontSize: 14, color: '#666' },
+});
