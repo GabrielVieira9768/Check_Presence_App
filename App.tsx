@@ -26,7 +26,7 @@ export default function App() {
           name="Subjects"
           component={SubjectListScreen}
           options={({ navigation }) => ({
-            title: 'Minhas Matérias',
+            title: 'Minhas Disciplinas',
             headerRight: () => (
               <View style={{ marginRight: 8 }}>
                 <Button

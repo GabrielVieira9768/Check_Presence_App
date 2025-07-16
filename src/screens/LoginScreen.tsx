@@ -48,6 +48,7 @@ export default function LoginScreen() {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        autoCapitalize="none"
       />
 
       <Button title="Entrar" onPress={handleLogin} />
