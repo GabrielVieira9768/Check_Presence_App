@@ -35,17 +35,12 @@ export default function SubjectListScreen() {
     loadSubjects();
   }, []);
 
-  /*const handleQRCode = () => {
-    // Redirecionar para tela de leitura do QRCode
-    navigation.navigate('QRCodeReader');
-  };*/
-
   if (loading) return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <Button title="Ler QRCode" /*onPress={handleQRCode}*/ />
+        <Button title="Ler QRCode" onPress={() => navigation.navigate('QRCodeReader')} />
       </View>
 
       <FlatList
