@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, StyleSheet, Button } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
+  Button,
+  Modal,
+  Pressable,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import api from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -15,6 +26,7 @@ type Subject = {
 export default function SubjectListScreen() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
@@ -35,17 +47,12 @@ export default function SubjectListScreen() {
     loadSubjects();
   }, []);
 
-  /*const handleQRCode = () => {
-    // Redirecionar para tela de leitura do QRCode
-    navigation.navigate('QRCodeReader');
-  };*/
-
   if (loading) return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <Button title="Ler QRCode" /*onPress={handleQRCode}*/ />
+        <Button title="Registrar Presença" onPress={() => setModalVisible(true)} />
       </View>
 
       <FlatList
@@ -66,13 +73,57 @@ export default function SubjectListScreen() {
           </TouchableOpacity>
         )}
       />
+
+      {/* Modal de presença */}
+      <Modal
+        visible={modalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  {/*<Text style={styles.closeButtonText}>✕</Text>*/}
+                </TouchableOpacity>
+
+                <Text style={styles.modalTitle}>Como deseja registrar a presença?</Text>
+
+                <Pressable
+                  style={styles.modalButton}
+                  onPress={() => {
+                    setModalVisible(false);
+                    /*navigation.navigate('QRCodeScanner');*/
+                  }}
+                >
+                  <Text style={styles.modalButtonText}>Ler QR Code</Text>
+                </Pressable>
+
+                <Pressable
+                  style={styles.modalButton}
+                  onPress={() => {
+                    setModalVisible(false);
+                    navigation.navigate('ManualCodeEntry');
+                  }}
+                >
+                  <Text style={styles.modalButtonText}>Digitar Código</Text>
+                </Pressable>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
   buttonContainer: { marginBottom: 20 },
   item: {
     padding: 16,
@@ -82,4 +133,49 @@ const styles = StyleSheet.create({
   },
   subjectName: { fontSize: 16, fontWeight: 'bold' },
   subtitle: { fontSize: 14, color: '#666' },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    width: '80%',
+    borderRadius: 12,
+    padding: 20,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 8,
+    zIndex: 1,
+  },
+  closeButtonText: {
+    fontSize: 20,
+    color: '#333',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    backgroundColor: '#007bff',
+    borderRadius: 8,
+    marginTop: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
 });
