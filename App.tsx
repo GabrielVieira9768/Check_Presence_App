@@ -1,18 +1,22 @@
 import React from 'react';
-import { Button, Alert, View } from 'react-native'; // import Button, Alert e View
+import { Button, Alert, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import AsyncStorage from '@react-native-async-storage/async-storage'; // importar AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import LoginScreen from './src/screens/LoginScreen';
 import SubjectListScreen from './src/screens/SubjectListScreen';
 import SubjectDetailScreen from './src/screens/SubjectDetailScreen';
+import ManualCodeEntryScreen from './src/screens/ManualCodeEntryScreen';
 
+// Tipos das rotas
 export type RootStackParamList = {
   Login: undefined;
   Subjects: undefined;
   SubjectDetail: { subjectId: number; subjectName: string };
+  ManualCodeEntry: undefined;
+  // QRCodeScanner: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -22,6 +26,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
+
         <Stack.Screen
           name="Subjects"
           component={SubjectListScreen}
@@ -55,10 +60,17 @@ export default function App() {
             ),
           })}
         />
+
         <Stack.Screen
           name="SubjectDetail"
           component={SubjectDetailScreen}
           options={({ route }) => ({ title: route.params.subjectName })}
+        />
+
+        <Stack.Screen
+          name="ManualCodeEntry"
+          component={ManualCodeEntryScreen}
+          options={{ title: 'Registro Manual' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
