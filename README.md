@@ -1,6 +1,6 @@
 # 📱 Check Presence App
 
-Aplicativo mobile desenvolvido com **React Native + Expo**, integrado a uma API em **Laravel**, para gerenciamento de **frequência estudantil** via leitura de **QR Codes**.
+Aplicativo mobile desenvolvido com **React Native + Expo**, integrado a uma API em **Laravel**, para gerenciamento de **frequência estudantil** via código ou leitura de **QR Codes**.
 
 ---
 
